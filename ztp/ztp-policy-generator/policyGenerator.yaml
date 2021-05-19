@@ -5,4 +5,11 @@ metadata:
   namespace: acm-policy-generator
 # The arguments should be given and defined as below with same order --policyGenTempPath= --sourcePath= --outPath= --stdout --customResources
 argsOneLiner: ./ranPolicyGenTempExamples ../source-policy-crs ./out true false
-
+---
+apiVersion: policyGenerator/v1
+kind: PolicyGenerator
+metadata:
+  name: clusters-config
+  namespace: cluster-config-generator
+# The arguments should be given and defined as below with same order --policyGenTempPath= --sourcePath= --outPath= --stdout --customResources
+argsOneLiner: ./clusterGenTempExamples ../source-cluster-crs ./out true true

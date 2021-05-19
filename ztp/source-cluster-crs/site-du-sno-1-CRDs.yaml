@@ -1,0 +1,89 @@
+apiVersion: v1
+data:
+  password: "Y2Fsdmlu"
+  username: "cm9vdA=="
+kind: Secret
+metadata:
+  name: site-du-sno-1-bmc-secret
+  namespace: assisted-installer
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: site-du-sno-1
+  namespace: assisted-installer
+  annotations:
+    inspect.metal3.io: disabled
+  labels:
+    infraenvs.agent-install.openshift.io: "site-du-sno-1"
+spec:
+  bootMode: "UEFI"
+  bmc:
+    address: idrac-virtualmedia+https://10.16.231.87/redfish/v1/Systems/System.Embedded.1
+    disableCertificateVerification: true
+    credentialsName: site-du-sno-1-bmc-secret
+  bootMACAddress: "f4:02:70:e5:10:48"
+  automatedCleaningMode: disabled
+  online: true
+---
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  name: site-du-sno-1
+  namespace: assisted-installer
+spec:
+  clusterDeploymentRef:
+    name: site-du-sno-1
+  imageSetRef:
+    name: openshift-v4.8.0
+  networking:
+    networkType: OVNKubernetes
+    clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+    machineNetwork:
+    - cidr: 10.16.231.0/24
+    serviceNetwork:
+    - 172.30.0.0/16
+  provisionRequirements:
+    controlPlaneAgents: 1
+  sshPublicKey: "ssh-rsa "
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: site-du-sno-1
+  namespace: assisted-installer
+spec:
+  baseDomain: ptp.lab.eng.bos.redhat.com
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    kind: AgentClusterInstall
+    name: site-du-sno-1
+    version: v1beta1
+  clusterName: site-du-sno-1
+  installed: false
+  platform:
+    agentBareMetal:
+      agentSelector:
+        matchLabels:
+          cluster-name: site-du-sno-1
+  pullSecretRef:
+    name: assisted-deployment-pull-secret
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: site-du-sno-1
+  namespace: assisted-installer
+spec:
+  clusterRef:
+    name: site-du-sno-1
+    namespace: assisted-installer
+  sshAuthorizedKey: "ssh-rsa "
+  agentLabelSelector:
+    matchLabels:
+      cluster-name: site-du-sno-1
+  pullSecretRef:
+    name: assisted-deployment-pull-secret

@@ -1,0 +1,39 @@
+---
+apiVersion: policyGenerator/v1
+kind: PolicyGenTemplate
+metadata:
+  name: "du-sno-clusters"
+  namespace: "clusters-template"
+  labels:
+    common: false
+    groupName: "N/A"
+    siteName: "N/A"
+    mcp: "N/A"
+sourceFiles:
+  # common CR for all clusters
+  - fileName: ClustersNS
+  - fileName: ClusterImageSet48
+  - fileName: SecretJson
+  # site-du-sno-cluster
+  - fileName: KlusterletAddonConfig
+    name: "site-du-sno-1"
+    spec:
+      clusterName: "site-du-sno-1"
+  - fileName: ManagedCluster
+    name: "site-du-sno-1"
+    labels:
+      common: "true"
+      group-du-sno: ""
+      sites: "site-du-sno-1"
+  - fileName: site-du-sno-1-CRDs
+  # site-du-cluster
+#  - fileName: KlusterletAddonConfig
+#    name: "site-du-1"
+#    spec:
+#      clusterName: "site-du-1"
+#  - fileName: ManagedCluster
+#    name: "site-du-1"
+#    labels:
+#      common: "true"
+#      group-du: ""
+#      sites: "site-du-1"
