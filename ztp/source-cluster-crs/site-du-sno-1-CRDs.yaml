@@ -26,6 +26,8 @@ spec:
   bootMACAddress: "f4:02:70:e5:10:48"
   automatedCleaningMode: disabled
   online: true
+  rootDeviceHints: 
+    hctl: '1:2:0:0'
 ---
 apiVersion: extensions.hive.openshift.io/v1beta1
 kind: AgentClusterInstall
